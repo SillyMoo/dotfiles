@@ -15,6 +15,8 @@ alias gcam='git commit -a -m'
 alias gs='git status -sb'
 alias gcb='git-copy-branch-name'
 alias gpr='gp && open-pr'
+alias gsi='git submodule init'
+alias gsu='git submodule update'
 
 gi() {
   curl -s "https://www.gitignore.io/api/$*";
