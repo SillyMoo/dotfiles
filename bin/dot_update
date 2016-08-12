@@ -1,27 +1,28 @@
-#!/bin/sh
+#!/bin/zsh
 #
 # dot_update
 #
 # `dot_update` handles installation, updates, things like that. Run it
 # periodically to make sure you're on the latest and greatest.
 export ZSH="$HOME/.dotfiles"
+cd "$ZSH" || exit 1
 
-# Set OS defaults
-echo "› set OS defaults"
-"$ZSH/osx/set-defaults.sh"
-"$ZSH/linux/set-defaults.sh"
+# fixes PATH (we could be running from the crontab)
+PATH="$(command -p getconf PATH):/usr/local/bin"
 
-# Upgrade homebrew
-if test "$(uname)" = "Darwin"; then
-  # Install homebrew
-  echo "› homebrew/install.sh"
-  "$ZSH/homebrew/install.sh"
+# ssh would not work under cron, add a https one
+echo "› setting up update channel"
+git remote add updates https://github.com/caarlos0/dotfiles.git 2> /dev/null
 
-  echo "› brew update"
-  brew update
-fi
+# Update repo
+echo "› git update"
+git pull --rebase --stat updates "$(git rev-parse --abbrev-ref HEAD)"
 
-# Install software
+# Update submodules
+echo "› submodules update"
+git submodule update --init --recursive --remote --merge --quiet
+
+# Run all installs
 echo "› $ZSH/script/install"
 "$ZSH/script/install"
 
@@ -29,3 +30,13 @@ if [ -n "$ZSH_VERSION" ]; then
   echo "› antibody update"
   antibody update
 fi
+
+echo "› updating completion cache"
+rm -f ~/.zcompdump
+autoload -Uz compinit && compinit
+
+echo "› registering last update"
+git config --global dotfiles.lastupdate "$(date +%Y%m%d%H%M)"
+
+echo "› update crontab config"
+"$ZSH/script/setup_autoupdate"

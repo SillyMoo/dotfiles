@@ -22,11 +22,11 @@
   "go-rename": {}
   gofmt:
     formatTool: "goreturns"
-  linter:
-    showErrorPanel: false
   "tree-view":
     hideVcsIgnoredFiles: true
   "unity-ui":
     showIcons: true
+  wakatime:
+    apikey: "Saved in your ~/.wakatime.cfg file"
   welcome:
     showOnStartup: false

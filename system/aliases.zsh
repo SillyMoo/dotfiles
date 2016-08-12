@@ -1,21 +1,17 @@
 #!/bin/sh
-
-alias wtf="imgcat ~/.dotfiles/imgs/wtf.gif"
-
 # grc overides for ls
 #   Made possible through contributions from generous benefactors like
 #   `brew install coreutils`
 if which gls >/dev/null 2>&1; then
   alias ls="gls -F --color"
-  alias l="gls -lAh --color"
-  alias ll="gls -l --color"
-  alias la="gls -A --color"
-else
+elif [ "$(uname -s)" != "Darwin" ]; then
   alias ls="ls -F --color"
-  alias l="ls -lAh --color"
-  alias ll="ls -l --color"
-  alias la="ls -A --color"
+else
+  alias ls="ls -F"
 fi
+alias l="ls -lAh"
+alias ll="ls -l"
+alias la="ls -A"
 alias grep="grep --color=auto"
 alias duf="du -sh * | sort -hr"
 alias less="less -r"
