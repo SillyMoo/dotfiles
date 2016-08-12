@@ -1,0 +1,3 @@
+#!/bin/sh
+# shellcheck disable=SC2164
+oc process -f $1|oc create -f -
